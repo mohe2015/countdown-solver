@@ -67,17 +67,23 @@ impl Iterator for CountdownNumberIterator {
         // more stupid and less efficident but easier implementation
         // TODO FIXME this creates lots of duplicates as the bits at the end that aren't used are changed only
         loop {
+            if self.permutation >= (1 << 26) {
+                return None;
+            }
+
             let mut index = 0;
+            let mut add: u32 = 4;
             for i in 2..22 {
                 if ((self.permutation >> i) & 1) == 1 {
                     result[index] = i/2;
                     index += 1;
                 }
                 if index == length {
+                    add = 1 << i;
                     break;
                 }
             }
-            self.permutation += 4; // lowest bits not used in loop
+            self.permutation += add; // lowest bits not used in loop
             if index == length { // otherwise not enough numbers where used (0s left)
                 break;
             }
