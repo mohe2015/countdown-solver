@@ -108,6 +108,7 @@ fn generate_numbers() {
 }
 
 fn generate_operator_orders() {
+    // six numbers
     // allowed ops: + - * /
     // order choosen freely
     // not all numbers need to be used but none can be used twice
@@ -124,8 +125,12 @@ fn generate_operator_orders() {
     // b - a
     // b / a
 
-    // maybe fixed number parameter order? maybe also generate b + c etc.?
-    // probably something recursive?
+    // YES: maybe fixed number parameter order? maybe also generate b + c etc.?
+    // probably something recursive? (write comparison function?)
+    // in theory a valid a - b would exclude b - a but I think this is too complicated
+
+    // maybe sort them so its easy to detect commutativity
+    // maybe memoization helps
 }
 
 fn main() {
