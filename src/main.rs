@@ -62,7 +62,7 @@ impl Iterator for CountdownNumberIterator {
         */
        
         // small numbers
-        // 2-5 numbers needed
+        // 2-5 numbers needed (maybe specialize for every one of these)
 
         // more stupid and less efficident but easier implementation
         // TODO FIXME this creates lots of duplicates as the bits at the end that aren't used are changed only
@@ -74,12 +74,14 @@ impl Iterator for CountdownNumberIterator {
             let mut index = 0;
             let mut add: u32 = 4;
             for i in 2..22 {
-                if ((self.permutation >> i) & 1) == 1 {
+                if ((self.permutation >> (23-i)) & 1) == 1 {
                     result[index] = i/2;
                     index += 1;
                 }
-                if index == length {
-                    add = 1 << i;
+                if index == length { // fully filled free places
+                    add = 0;
+                    self.permutation = (self.permutation >> (23-i)) << (23-i);
+                    self.permutation += 1 << (24-i);
                     break;
                 }
             }
