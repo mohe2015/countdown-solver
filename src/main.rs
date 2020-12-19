@@ -107,6 +107,27 @@ fn generate_numbers() {
     println!("{}", counter);
 }
 
+fn generate_operator_orders() {
+    // allowed ops: + - * /
+    // order choosen freely
+    // not all numbers need to be used but none can be used twice
+    // division only without remainder
+    // only positive numbers at any stage
+    // + and * is commutative
+    // / and - can only be used rarely properly (underflow, remainder)
+    
+    // starting with
+    // a + b
+    // a - b
+    // a * b
+    // a / b
+    // b - a
+    // b / a
+
+    // maybe fixed number parameter order? maybe also generate b + c etc.?
+    // probably something recursive?
+}
+
 fn main() {
     println!("Hello, world!");
     generate_numbers()
