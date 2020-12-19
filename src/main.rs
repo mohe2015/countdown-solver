@@ -140,7 +140,7 @@ impl Iterator for OperatorCombinationIterator {
                 // not allowed
                 // 1 0
                 // !(A & !B) = !A | B
-                valid &= ((self.combination >> i) & 1 == 0) || ((self.combination >> 30) & 1 == 1);
+                valid &= ((self.combination >> i) & 1 == 0) || ((self.combination >> (i/2+16)) & 1 == 1);
             }
             for i in 24..28 { // 4
                 // 12, 13 + 16 = 28 29
