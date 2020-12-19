@@ -99,9 +99,12 @@ fn generate_numbers() {
     let countdown_numbers = CountdownNumberIterator {
         permutation: 0
     };
+    let mut counter: u64 = 0;
     for numbers in countdown_numbers {
-        println!("{:?}", numbers);
+        counter = counter + u64::from(numbers[0]); 
+        //println!("{:?}", numbers);
     }
+    println!("{}", counter);
 }
 
 fn main() {
