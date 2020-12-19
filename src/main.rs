@@ -1,36 +1,44 @@
-struct BigNumberIterator {}
+struct CountdownNumberIterator {
+    index: u64
+}
 
-impl Iterator for BigNumberIterator {
-    type Item = u8;
+impl Iterator for CountdownNumberIterator {
+    type Item = [u8; 6];
 
-    fn next(&mut self) -> Option<u8> {
+    fn next(&mut self) -> Option<[u8; 6]> {
+        // this array would be about 1MB of storage
+
         // only sort ascending which prevents duplicates
 
-        // (hopefully all big number possibilities)
+        // TODO CHECK
+        let major_numbers: [[u8; 6]; 16] = [
+            [0, 0, 0,  0,  0,  25 ],
+            [0, 0, 0,  0,  0,  50 ],
+            [0, 0, 0,  0,  0,  75 ],
+            [0, 0, 0,  0,  0,  100],
+            [0, 0, 0,  0,  25, 50 ],
+            [0, 0, 0,  0,  25, 75 ],
+            [0, 0, 0,  0,  25, 100],
+            [0, 0, 0,  0,  50, 75 ],
+            [0, 0, 0,  0,  50, 100],
+            [0, 0, 0,  0,  75, 100],
+            [0, 0, 0,  25, 50, 75 ],
+            [0, 0, 0,  25, 50, 75 ],
+            [0, 0, 0,  25, 50, 100],
+            [0, 0, 0,  25, 75, 100],
+            [0, 0, 0,  50, 75, 100],
+            [0, 0, 25, 50, 75, 100]
+        ];
 
-        // 25
-        // 50
-        // 75
-        // 100
+        // 2 bits per small number (one invalid state)
 
-        // 25, 50
-        // 25, 75
-        // 25, 100
+        // small numbers
+        // 2-5 numbers needed
 
-        // 50, 75
-        // 50, 100
+        // for every number from 1 - 10 we can choose (), (x), (x x) - reverse doesnt matter
+        // so choose one of these until you got the amount of numbers needed
 
-        // 75, 100
-
-        // 25, 50, 75
-        // 25, 50, 100
-        // 25, 75, 100
-
-        // 50, 75, 100
-
-        // 25, 50, 75, 100
-
-        Some(1)
+        Some(major_numbers[0])
     }
 }
 
