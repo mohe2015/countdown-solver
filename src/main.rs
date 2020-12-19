@@ -107,6 +107,33 @@ fn generate_numbers() {
     println!("{}", counter);
 }
 
+struct OperatorCombinationIterator {
+    combination: u32
+}
+
+impl Iterator for OperatorCombinationIterator {
+    type Item = u32;
+
+    fn next(&mut self) -> Option<u32> {
+        // maybe do it the over way around? (bit representation)
+        // lowest 16 bits are lowest branches
+        // then 8, 4, 2, and 1 is the top
+
+        // shift right:
+        // 31 [30] [29 28] [27 26 25 24] [23 22 21 20 19 18 17 16] [15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0]
+
+        // top down should be more efficient?
+                
+        let mut valid: bool = true;
+        
+        for i in (16+8+4-1)..(16+8+4+2) {
+        }
+
+
+        None
+    }
+}
+
 fn generate_operator_orders() {
     // six numbers
     // allowed ops: + - * /
