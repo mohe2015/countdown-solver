@@ -123,15 +123,58 @@ impl Iterator for OperatorCombinationIterator {
         // 31 [30] [29 28] [27 26 25 24] [23 22 21 20 19 18 17 16] [15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0]
 
         // top down should be more efficient?
-                
-        let mut valid: bool = true;
         
-        for i in (16+8+4-1)..(16+8+4+2) {
+        loop {
+            if self.combination & (1 << 31) != 0 {
+                return None;
+            }
+
+            // maybe instead use an integer so everything is bitwise operations (see assembly)
+            let mut valid: bool = true;
+            
+            for i in 28..30 { // 2
+                // allowed
+                // 1 1
+                // 0 1
+                // 0 0
+                // not allowed
+                // 1 0
+                // !(A & !B) = !A | B
+                valid &= ((self.combination >> i) & 1 == 0) || ((self.combination >> 30) & 1 == 1);
+            }
+            for i in 24..28 { // 4
+                // 12, 13 + 16 = 28 29
+                valid &= ((self.combination >> i) & 1 == 0) || ((self.combination >> (i/2+16)) & 1 == 1);
+            }
+            for i in 16..24 { // 8
+                // 8 11 + 16 = 24 27
+                valid &= ((self.combination >> i) & 1 == 0) || ((self.combination >> (i/2+16)) & 1 == 1);
+            }
+            for i in 0..16 { // 16
+                // 0 7 + 16 = 16 23
+                valid &= ((self.combination >> i) & 1 == 0) || ((self.combination >> (i/2+16)) & 1 == 1);
+            }
+            self.combination += 1;
+            if valid {
+                break;
+            }
         }
 
 
-        None
+        Some(self.combination)
     }
+}
+
+fn generate_operator_combinations() {
+    let operator_combinations = OperatorCombinationIterator {
+        combination: 0
+    };
+    let mut counter: u64 = 0;
+    for combination in operator_combinations {
+        counter = counter + u64::from(combination); 
+        println!("{}", combination);
+    }
+    println!("{}", counter);
 }
 
 fn generate_operator_orders() {
@@ -161,6 +204,7 @@ fn generate_operator_orders() {
 }
 
 fn main() {
-    println!("Hello, world!");
-    generate_numbers()
+    //println!("Hello, world!");
+    //generate_numbers()
+    generate_operator_combinations()
 }
