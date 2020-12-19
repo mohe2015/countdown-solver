@@ -1,0 +1,35 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cargo",
+			"subcommand": "run",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": {
+                "kind": "build",
+                "isDefault": true
+            },
+			"label": "Rust: cargo run - countdown-solver"
+		},
+		{
+			"type": "cargo",
+			"subcommand": "check",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "Rust: cargo check - countdown-solver"
+		},
+		{
+			"type": "cargo",
+			"subcommand": "build",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "Rust: cargo build - countdown-solver"
+		}
+	]
+}
