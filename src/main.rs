@@ -129,47 +129,21 @@ impl Iterator for OperatorCombinationIterator {
         // top down should be more efficient?
         
         loop {
-            // maybe optimize and store complement of combination as its heavily used
-
             if self.combination & (1 << 31) != 0 {
                 return None;
             }
 
-            // maybe instead use an integer so everything is bitwise operations (see assembly)
-            // TODO below in loops early break?
-            let mut valid: bool = true;
+            let mut valid: u32 = 1;
             let mut leaves: u32 = 0;
             
-            // TODO FIXME I'm we can combine all these loops as they contain the same contents even if it's not intuitive 
-            for i in 28..30 { // 2
-                // allowed
-                // 1 1
-                // 0 1
-                // 0 0
-                // not allowed
-                // 1 0
-                // !(A & !B) = !A | B
-                valid &= ((self.combination >> i) & 1 == 0) || ((self.combination >> (i/2+16)) & 1 == 1);
-                leaves += (!(self.combination >> i) & (self.combination >> (i/2+16))) & 1;
-            }
-            for i in 24..28 { // 4
-                // 12, 13 + 16 = 28 29
-                valid &= ((self.combination >> i) & 1 == 0) || ((self.combination >> (i/2+16)) & 1 == 1);
-                leaves += (!(self.combination >> i) & (self.combination >> (i/2+16))) & 1;
-            }
-            for i in 16..24 { // 8
-                // 8 11 + 16 = 24 27
-                valid &= ((self.combination >> i) & 1 == 0) || ((self.combination >> (i/2+16)) & 1 == 1);
-                leaves += (!(self.combination >> i) & (self.combination >> (i/2+16))) & 1;
-            }
-            for i in 0..16 { // 16
-                // 0 7 + 16 = 16 23
-                valid &= ((self.combination >> i) & 1 == 0) || ((self.combination >> (i/2+16)) & 1 == 1);
-                leaves += (!(self.combination >> i) & (self.combination >> (i/2+16))) & 1;
+            let combination_complement = !self.combination;
+            for i in 0..30 {
+                leaves += ((combination_complement >> i) & (self.combination >> (i/2+16))) & 1;
+                valid &= (combination_complement >> i) | (self.combination >> (i/2+16));
             }
 
             self.combination += 1;
-            if valid && leaves <= 6 {
+            if ((valid & 1) == 1) && leaves <= 6 {
                 break;
             }
         }
@@ -185,7 +159,7 @@ fn generate_operator_combinations() {
     let mut counter: u64 = 0;
     for combination in operator_combinations {
         counter = counter + u64::from(combination); 
-        println!("{}", combination);
+        //println!("{}", combination);
     }
     println!("{}", counter);
 }
