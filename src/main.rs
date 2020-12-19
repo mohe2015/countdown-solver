@@ -35,7 +35,7 @@ impl Iterator for CountdownNumberIterator {
         // TODO CHECK
         const LENGTH: [usize; 16] = [5,5,5,5,4,4,4,4,4,4,3,3,3,3,3,2];
 
-        let big_number_permutation: usize = ((self.permutation >> 21) & 0b1111).try_into().unwrap(); // TODO FIXME I don't understand why I need this
+        let big_number_permutation: usize = ((self.permutation >> 22) & 0b1111).try_into().unwrap(); // TODO FIXME I don't understand why I need this
         let mut result = MAJOR_NUMBERS[big_number_permutation]; // TODO FIXME does this break the original array contentes?
         let length = LENGTH[big_number_permutation];
 
@@ -65,18 +65,24 @@ impl Iterator for CountdownNumberIterator {
         // 2-5 numbers needed
 
         // more stupid and less efficident but easier implementation
-        let mut index = 0;
-        for i in 1..21 {
-            if ((self.permutation >> i) & 1) == 1 {
-                result[index] = i;
-                index += 1;
+        // TODO FIXME this creates lots of duplicates as the bits at the end that aren't used are changed only
+        loop {
+            let mut index = 0;
+            for i in 2..22 {
+                if ((self.permutation >> i) & 1) == 1 {
+                    result[index] = i/2;
+                    index += 1;
+                }
+                if index == length {
+                    break;
+                }
             }
-            if index == length {
+            self.permutation += 4; // lowest bits not used in loop
+            if index == length { // otherwise not enough numbers where used (0s left)
                 break;
             }
         }
-        self.permutation += 2; // lowest bit not used in loop
-       
+        
         Some(result)
     }
 }
