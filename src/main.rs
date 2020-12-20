@@ -133,14 +133,13 @@ impl Iterator for OperatorCombinationIterator {
                 return None;
             }
 
-            let mut valid: u32 = 1;
             let mut leaves: u32 = 0;
             
             let combination_complement = !self.combination;
             for i in 0..30 {
                 leaves += ((combination_complement >> i) & (self.combination >> (i/2+16))) & 1;
-                valid &= (combination_complement >> i) | (self.combination >> (i/2+16));
-                if (valid & 1) == 0 || leaves > 6 {
+                let invalid = ((combination_complement >> i) | (self.combination >> (i/2+16))) & 1 == 0;
+                if invalid || leaves > 6 {
                     self.combination += 1;
                     continue 'outer;
                 }

@@ -4,6 +4,14 @@
 
 profile guided optimization
 
+# Rust (without Rustup)
+
+```bash
+nix shell nixpkgs#cargo nixpkgs#rustc
+RUSTFLAGS="-C target-cpu=native" cargo build --release
+
+```
+
 # Profiling
 
 ```bash
