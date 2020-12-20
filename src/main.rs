@@ -98,7 +98,7 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
             
                 let mut new_numbers = numbers;
                 new_numbers[i] = result;
-                for k in i..new_numbers.len()-1 {
+                for k in i+1..new_numbers.len()-1 {
                     new_numbers[k] = new_numbers[k+1];
                 }
                 new_numbers[new_numbers.len()-1] = i32::MAX;
@@ -115,7 +115,7 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
                 
                 let mut new_numbers = numbers;
                 new_numbers[i] = result;
-                for k in i..new_numbers.len()-1 {
+                for k in i+1..new_numbers.len()-1 {
                     new_numbers[k] = new_numbers[k+1];
                 }
                 new_numbers[new_numbers.len()-1] = i32::MAX;
@@ -133,7 +133,7 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
                     
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
-                    for k in i..new_numbers.len()-1 {
+                    for k in i+1..new_numbers.len()-1 {
                         new_numbers[k] = new_numbers[k+1];
                     }
                     new_numbers[new_numbers.len()-1] = i32::MAX;
@@ -151,7 +151,7 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
                     
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
-                    for k in i..new_numbers.len()-1 {
+                    for k in i+1..new_numbers.len()-1 {
                         new_numbers[k] = new_numbers[k+1];
                     }
                     new_numbers[new_numbers.len()-1] = i32::MAX;
@@ -170,7 +170,7 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
                     
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
-                    for k in i..new_numbers.len()-1 {
+                    for k in i+1..new_numbers.len()-1 {
                         new_numbers[k] = new_numbers[k+1];
                     }
                     new_numbers[new_numbers.len()-1] = i32::MAX;
@@ -189,7 +189,7 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
                     
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
-                    for k in i..new_numbers.len()-1 {
+                    for k in i+1..new_numbers.len()-1 {
                         new_numbers[k] = new_numbers[k+1];
                     }
                     new_numbers[new_numbers.len()-1] = i32::MAX;
