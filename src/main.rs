@@ -196,7 +196,7 @@ fn generate_operator_orders() {
 fn main() {
     //println!("Hello, world!");
     //generate_numbers()
-    alternative_generate_operator_combinations()
+    step([false; 900], [1,2,3,4,5,6]);
 }
 
 fn alternative_generate_operator_combinations() {
@@ -223,18 +223,18 @@ fn alternative_generate_operator_combinations() {
 
 // number 0 means None
 // TODO add numbers itself as solution
-fn step(solutions: &[bool; 900], numbers: &[u8; 6]) {
+fn step(solutions: [bool; 900], numbers: [u8; 6]) {
     for i in 0..numbers.len() {
-        if (numbers[i] == 0) { continue };
+        if numbers[i] == 0 { continue };
         for j in i+1..numbers.len() {
-            if (numbers[j] == 0) { continue; }
+            if numbers[j] == 0 { continue; }
             
             // got two numbers
-            let addition = numbers[i] + numbers[j];
-            if (addition >= 100 && addition < 1000) {
-                solutions[addition-100] = true;
-                
-                
+            let addition: usize = (numbers[i] + numbers[j]).into();
+            if (100..1000).contains(&addition) {
+                let mut new_solutions = solutions;
+                new_solutions[addition-100] = true;
+
             }
             // TODO FIXME inner stepping
             
