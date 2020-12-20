@@ -237,56 +237,64 @@ fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
             if numbers[j] == u32::MAX { continue; }
             
             {
-                let addition = numbers[i] + numbers[j];
-                if (100..1000).contains(&addition) {
+                let result = numbers[i] + numbers[j];
+                if result > 0 {
                     let mut new_numbers = numbers;
-                    new_numbers[i] = addition;
+                    new_numbers[i] = result;
                     new_numbers[j] = u32::MAX;
                     
-                    solutions[usize::try_from(addition-100).unwrap()] = true;
-                    println!("{} + {} = {}", numbers[i], numbers[j], addition);
+                    if (100..1000).contains(&result) {
+                        solutions[usize::try_from(result-100).unwrap()] = true;
+                        println!("{} + {} = {}", numbers[i], numbers[j], result);
+                    }
                     
                     step(solutions, new_numbers);
                 }
             }
             
             {
-                let multiplication = numbers[i] * numbers[j];
-                if (100..1000).contains(&multiplication) {
+                let result = numbers[i] * numbers[j];
+                if result > 0 {
                     let mut new_numbers = numbers;
-                    new_numbers[i] = multiplication;
+                    new_numbers[i] = result;
                     new_numbers[j] = u32::MAX;
                     
-                    solutions[usize::try_from(multiplication-100).unwrap()] = true;
-                    println!("{} * {} = {}", numbers[i], numbers[j], multiplication);
+                    if (100..1000).contains(&result) {
+                        solutions[usize::try_from(result-100).unwrap()] = true;
+                        println!("{} * {} = {}", numbers[i], numbers[j], result);
+                    }
                     
                     step(solutions, new_numbers);
                 }
             }
             
             {
-                let subtraction = numbers[i] - numbers[j];
-                if (100..1000).contains(&subtraction) {
+                let result = numbers[i] - numbers[j];
+                if result > 0 {
                     let mut new_numbers = numbers;
-                    new_numbers[i] = subtraction;
+                    new_numbers[i] = result;
                     new_numbers[j] = u32::MAX;
                     
-                    solutions[usize::try_from(subtraction-100).unwrap()] = true;
-                    println!("{} - {} = {}", numbers[i], numbers[j], subtraction);
+                    if (100..1000).contains(&result) {
+                        solutions[usize::try_from(result-100).unwrap()] = true;
+                        println!("{} - {} = {}", numbers[i], numbers[j], result);
+                    }
                     
                     step(solutions, new_numbers);
                 }
             }
             
             {
-                let reverse_subtraction = numbers[j] - numbers[i];
-                if (100..1000).contains(&reverse_subtraction) {
+                let result = numbers[j] - numbers[i];
+                if result > 0 {
                     let mut new_numbers = numbers;
-                    new_numbers[i] = reverse_subtraction;
+                    new_numbers[i] = result;
                     new_numbers[j] = u32::MAX;
                     
-                    solutions[usize::try_from(reverse_subtraction-100).unwrap()] = true;
-                    println!("{} - {} = {}", numbers[j], numbers[i], reverse_subtraction);
+                    if (100..1000).contains(&result) {
+                        solutions[usize::try_from(result-100).unwrap()] = true;
+                        println!("{} - {} = {}", numbers[j], numbers[i], result);
+                    }
                     
                     step(solutions, new_numbers);
                 }
@@ -294,28 +302,32 @@ fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
             
             // TODO FIXME check no remainder
             {
-                let division = numbers[i] / numbers[j];
-                if (100..1000).contains(&division) {
+                let result = numbers[i] / numbers[j];
+                if result > 0 {
                     let mut new_numbers = numbers;
-                    new_numbers[i] = division;
+                    new_numbers[i] = result;
                     new_numbers[j] = u32::MAX;
                     
-                    solutions[usize::try_from(division-100).unwrap()] = true;
-                    println!("{} / {} = {}", numbers[i], numbers[j], division);
+                    if (100..1000).contains(&result) {
+                        solutions[usize::try_from(result-100).unwrap()] = true;
+                        println!("{} / {} = {}", numbers[i], numbers[j], result);
+                    }
                     
                     step(solutions, new_numbers);
                 }
             }
             
             {
-                let reverse_division = numbers[j] - numbers[i];
-                if (100..1000).contains(&reverse_division) {
+                let result = numbers[j] - numbers[i];
+                if result > 0 {
                     let mut new_numbers = numbers;
-                    new_numbers[i] = reverse_division;
+                    new_numbers[i] = result;
                     new_numbers[j] = u32::MAX;
                     
-                    solutions[usize::try_from(reverse_division-100).unwrap()] = true;
-                    println!("{} / {} = {}", numbers[j], numbers[i], reverse_division);
+                    if (100..1000).contains(&result) {
+                        solutions[usize::try_from(result-100).unwrap()] = true;
+                        println!("{} / {} = {}", numbers[j], numbers[i], result);
+                    }
                     
                     step(solutions, new_numbers);
                 }
