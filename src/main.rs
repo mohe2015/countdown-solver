@@ -15,8 +15,7 @@ fn generate_small_numbers(mut numbers: [i32; 6], index: usize, max_number: i32) 
         if index == 5 {
             print!("{{key: {:?}, value: [", numbers);
             
-            let mut solutions = [false; 900];
-            step(&mut solutions, numbers);
+            let solutions = step(numbers);
     
             for (i, solution) in solutions.iter().enumerate() {
                 if !*solution {
@@ -61,7 +60,7 @@ fn generate_numbers() {
 
 
 thread_local! {
-    pub static MEMOIZATION: RefCell<HashMap<[i32; 6], u32>> = RefCell::new(HashMap::new());
+    pub static MEMOIZATION: RefCell<HashMap<[i32; 6], [bool; 900]>> = RefCell::new(HashMap::new());
 }
 
 fn main() {
@@ -69,20 +68,29 @@ fn main() {
     generate_numbers();
     println!("]");
     
-     MEMOIZATION.with(|m| {
-         for (key, value) in &(*m.borrow()) {
-            eprintln!("{:?}: {}", key, value);
-        }
-    });
+    // MEMOIZATION.with(|m| {
+    //     for (key, value) in &(*m.borrow()) {
+    //        eprintln!("{:?}: {:?}", key, value);
+    //    }
+    //});
 }
 
 // log2(100*75*50*25*10*10) = 30
 // u32::MAX means empty as is shouldn't be reachable
 
-fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
-    MEMOIZATION.with(|m| {
-         *m.borrow_mut().entry(numbers).or_insert(0) += 1;
+fn step(numbers: [i32; 6]) -> [bool; 900] {
+    let is_cached = MEMOIZATION.with(|m| {
+        if let Some(cached_solutions) = m.borrow_mut().get(&numbers) {
+            return Some(*cached_solutions)
+        } else {
+            None
+        }
     });
+    if is_cached.is_some() {
+        return is_cached.unwrap();
+    }
+    
+    let mut solutions = [false; 900];
     
     for i in 0..numbers.len() {
         if numbers[i] == i32::MAX { break; }
@@ -92,10 +100,6 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
             {
                 let result = numbers[i] + numbers[j];
                 
-                if (100..1000).contains(&result) {
-                    solutions[usize::try_from(result-100).unwrap()] = true;
-                }
-            
                 let mut new_numbers = numbers;
                 new_numbers[i] = result;
                 for k in i+1..new_numbers.len()-1 {
@@ -103,16 +107,19 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
                 }
                 new_numbers[new_numbers.len()-1] = i32::MAX;
                 
-                step(solutions, new_numbers);
+                let inner_solutions = step(new_numbers);
+                for i in 0..solutions.len() {
+                    solutions[i] |= inner_solutions[i];
+                }
+                
+                if (100..1000).contains(&result) {
+                    solutions[usize::try_from(result-100).unwrap()] = true;
+                }
             }
             
             {
                 let result = numbers[i] * numbers[j];
                 
-                if (100..1000).contains(&result) {
-                    solutions[usize::try_from(result-100).unwrap()] = true;
-                }
-                
                 let mut new_numbers = numbers;
                 new_numbers[i] = result;
                 for k in i+1..new_numbers.len()-1 {
@@ -120,17 +127,19 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
                 }
                 new_numbers[new_numbers.len()-1] = i32::MAX;
                 
-                step(solutions, new_numbers);
+                let inner_solutions = step(new_numbers);
+                for i in 0..solutions.len() {
+                    solutions[i] |= inner_solutions[i];
+                }
+                
+                if (100..1000).contains(&result) {
+                    solutions[usize::try_from(result-100).unwrap()] = true;
+                }
             }
             
             {
                 let result = numbers[i] - numbers[j];
                 if result >= 0 {
-                    
-                    if (100..1000).contains(&result) {
-                        solutions[usize::try_from(result-100).unwrap()] = true;
-                    }
-                    
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
                     for k in i+1..new_numbers.len()-1 {
@@ -138,17 +147,20 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
                     }
                     new_numbers[new_numbers.len()-1] = i32::MAX;
                     
-                    step(solutions, new_numbers);
+                    let inner_solutions = step(new_numbers);
+                    for i in 0..solutions.len() {
+                        solutions[i] |= inner_solutions[i];
+                    }
+                    
+                    if (100..1000).contains(&result) {
+                        solutions[usize::try_from(result-100).unwrap()] = true;
+                    }
                 }
             }
             
             {
                 let result = numbers[j] - numbers[i];
                 if result >= 0 {
-                    if (100..1000).contains(&result) {
-                        solutions[usize::try_from(result-100).unwrap()] = true;
-                    }
-                    
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
                     for k in i+1..new_numbers.len()-1 {
@@ -156,7 +168,14 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
                     }
                     new_numbers[new_numbers.len()-1] = i32::MAX;
                     
-                    step(solutions, new_numbers);
+                    let inner_solutions = step(new_numbers);
+                    for i in 0..solutions.len() {
+                        solutions[i] |= inner_solutions[i];
+                    }
+                    
+                    if (100..1000).contains(&result) {
+                        solutions[usize::try_from(result-100).unwrap()] = true;
+                    }
                 }
             }
             
@@ -164,10 +183,6 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
                 if numbers[j] != 0 && numbers[i] % numbers[j] == 0 {
                     let result = numbers[i] / numbers[j];
                     
-                    if (100..1000).contains(&result) {
-                        solutions[usize::try_from(result-100).unwrap()] = true;
-                    }
-                    
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
                     for k in i+1..new_numbers.len()-1 {
@@ -175,17 +190,20 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
                     }
                     new_numbers[new_numbers.len()-1] = i32::MAX;
                     
-                    step(solutions, new_numbers);
+                    let inner_solutions = step(new_numbers);
+                    for i in 0..solutions.len() {
+                        solutions[i] |= inner_solutions[i];
+                    }
+                    
+                    if (100..1000).contains(&result) {
+                        solutions[usize::try_from(result-100).unwrap()] = true;
+                    }
                 }
             }
             
             {
                 if numbers[i] != 0 && numbers[j] % numbers[i] == 0 {
                     let result = numbers[j] / numbers[i];
-    
-                    if (100..1000).contains(&result) {
-                        solutions[usize::try_from(result-100).unwrap()] = true;
-                    }
                     
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
@@ -194,11 +212,19 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
                     }
                     new_numbers[new_numbers.len()-1] = i32::MAX;
                     
-                    step(solutions, new_numbers);
+                    let inner_solutions = step(new_numbers);
+                    for i in 0..solutions.len() {
+                        solutions[i] |= inner_solutions[i];
+                    }
+                    
+                    if (100..1000).contains(&result) {
+                        solutions[usize::try_from(result-100).unwrap()] = true;
+                    }
                 }
             }
         }
     }
+    solutions
 }
 
 
