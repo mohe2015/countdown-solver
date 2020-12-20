@@ -204,18 +204,43 @@ fn alternative_generate_operator_combinations() {
     'outer: for combination in 0u64..(1 << 31) {
 
         let mut leaves: u64 = 0;
+        let mut valid: u64 = 1;
         
         let combination_complement = !combination;
         for i in 0..30 {
             let a = (combination_complement >> i);
             let b = (combination >> (i/2+16));
             leaves += (a & b) & 1;
-            let invalid = (a | b) & 1 == 0;
-            if invalid || leaves > 6 {
-                continue 'outer;
-            }
+            valid &= a | b;
         }
-        counter += combination;
+        if (valid & 1) == 0 || leaves > 6 {
+            continue 'outer;
+        }
+        counter += 1;
     }
     println!("{}", counter);
 }
+
+// number 0 means None
+// TODO add numbers itself as solution
+fn step(solutions: &[bool; 900], numbers: &[u8; 6]) {
+    for i in 0..numbers.len() {
+        if (numbers[i] == 0) { continue };
+        for j in i+1..numbers.len() {
+            if (numbers[j] == 0) { continue; }
+            
+            // got two numbers
+            let addition = numbers[i] + numbers[j];
+            if (addition >= 100 && addition < 1000) {
+                solutions[addition-100] = true;
+                
+                
+            }
+            // TODO FIXME inner stepping
+            
+        }
+    }
+}
+
+
+
