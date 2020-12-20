@@ -1,5 +1,7 @@
 use std::convert::TryInto;
 use std::convert::TryFrom;
+use std::collections::HashMap;
+use std::cell::RefCell;
 
 struct CountdownNumberIterator {
     permutation: u32
@@ -56,6 +58,10 @@ fn generate_numbers() {
     println!("{}", counter);
 }
 
+thread_local! {
+    pub static MEMOIZATION: RefCell<HashMap<[i32; 6], u32>> = RefCell::new(HashMap::new());
+}
+
 fn main() {
     //println!("Hello, world!");
     //generate_numbers()
@@ -66,22 +72,32 @@ fn main() {
             println!("{}", i+100)
         }
     }
+    MEMOIZATION.with(|m| {
+         for (key, value) in &(*m.borrow()) {
+            println!("{:?}: {}", key, value);
+        }
+    });
 }
 
 // log2(100*75*50*25*10*10) = 30
 // u32::MAX means empty as is shouldn't be reachable
-fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
+
+fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
+    MEMOIZATION.with(|m| {
+         *m.borrow_mut().entry(numbers).or_insert(0) += 1;
+    });
+    
     for i in 0..numbers.len() {
-        if numbers[i] == u32::MAX { continue };
+        if numbers[i] == i32::MAX { continue };
         for j in i+1..numbers.len() {
-            if numbers[j] == u32::MAX { continue; }
+            if numbers[j] == i32::MAX { continue; }
             
             {
                 let result = numbers[i] + numbers[j];
             
                 let mut new_numbers = numbers;
                 new_numbers[i] = result;
-                new_numbers[j] = u32::MAX;
+                new_numbers[j] = i32::MAX;
                 
                 if (100..1000).contains(&result) {
                     solutions[usize::try_from(result-100).unwrap()] = true;
@@ -95,7 +111,7 @@ fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
                 
                 let mut new_numbers = numbers;
                 new_numbers[i] = result;
-                new_numbers[j] = u32::MAX;
+                new_numbers[j] = i32::MAX;
                 
                 if (100..1000).contains(&result) {
                     solutions[usize::try_from(result-100).unwrap()] = true;
@@ -106,10 +122,10 @@ fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
             
             {
                 let result = numbers[i] - numbers[j];
-                if result > 0 {
+                if result >= 0 {
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
-                    new_numbers[j] = u32::MAX;
+                    new_numbers[j] = i32::MAX;
                     
                     if (100..1000).contains(&result) {
                         solutions[usize::try_from(result-100).unwrap()] = true;
@@ -121,10 +137,10 @@ fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
             
             {
                 let result = numbers[j] - numbers[i];
-                if result > 0 {
+                if result >= 0 {
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
-                    new_numbers[j] = u32::MAX;
+                    new_numbers[j] = i32::MAX;
                     
                     if (100..1000).contains(&result) {
                         solutions[usize::try_from(result-100).unwrap()] = true;
@@ -140,7 +156,7 @@ fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
                     
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
-                    new_numbers[j] = u32::MAX;
+                    new_numbers[j] = i32::MAX;
                     
                     if (100..1000).contains(&result) {
                         solutions[usize::try_from(result-100).unwrap()] = true;
@@ -156,7 +172,7 @@ fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
     
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
-                    new_numbers[j] = u32::MAX;
+                    new_numbers[j] = i32::MAX;
                     
                     if (100..1000).contains(&result) {
                         solutions[usize::try_from(result-100).unwrap()] = true;
