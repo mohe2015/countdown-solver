@@ -16,7 +16,7 @@ fn generate_small_numbers(mut numbers: [i32; 6], index: usize, max_number: i32) 
             print!("{:?}:", numbers);
             
             let mut solutions = [false; 900];
-            step(&mut solutions, [1, 3, 5, 25, 50, 100]);
+            step(&mut solutions, numbers);
     
             for (i, solution) in solutions.iter().enumerate() {
                 if !*solution {
