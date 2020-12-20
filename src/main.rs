@@ -196,7 +196,7 @@ fn generate_operator_orders() {
 fn main() {
     //println!("Hello, world!");
     //generate_numbers()
-    step([false; 900], [1,2,3,4,5,6]);
+    step([false; 900], [1, 3, 5, 25, 50, 100]);
 }
 
 fn alternative_generate_operator_combinations() {
@@ -221,22 +221,25 @@ fn alternative_generate_operator_combinations() {
     println!("{}", counter);
 }
 
-// number 0 means None
-// TODO add numbers itself as solution
-fn step(solutions: [bool; 900], numbers: [u8; 6]) {
+// log2(100*75*50*25*10*10) = 30
+// u32::MAX means empty as is shouldn't be reachable
+fn step(solutions: [bool; 900], numbers: [u32; 6]) {
     for i in 0..numbers.len() {
-        if numbers[i] == 0 { continue };
+        if numbers[i] == u32::MAX { continue };
         for j in i+1..numbers.len() {
-            if numbers[j] == 0 { continue; }
+            if numbers[j] == u32::MAX { continue; }
             
-            // got two numbers
-            let addition: usize = (numbers[i] + numbers[j]).into();
+            let addition = numbers[i] + numbers[j];
             if (100..1000).contains(&addition) {
-                let mut new_solutions = solutions;
-                new_solutions[addition-100] = true;
-
+                let mut new_numbers = numbers;
+                new_numbers[i] = addition;
+                new_numbers[j] = u32::MAX;
+                
+                //new_solutions[addition-100] = true;
+                println!("{} + {} = {}", numbers[i], numbers[j], addition);
+                
+                step(solutions, new_numbers);
             }
-            // TODO FIXME inner stepping
             
         }
     }
