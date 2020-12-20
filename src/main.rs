@@ -141,6 +141,7 @@ impl Iterator for OperatorCombinationIterator {
                 leaves += ((combination_complement >> i) & (self.combination >> (i/2+16))) & 1;
                 valid &= (combination_complement >> i) | (self.combination >> (i/2+16));
                 if (valid & 1) == 0 || leaves > 6 {
+                    self.combination += 1;
                     continue 'outer;
                 }
             }
