@@ -85,7 +85,6 @@ fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
                 
                 if (100..1000).contains(&result) {
                     solutions[usize::try_from(result-100).unwrap()] = true;
-                    println!("{} + {} = {}", numbers[i], numbers[j], result);
                 }
                 
                 step(solutions, new_numbers);
@@ -100,7 +99,6 @@ fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
                 
                 if (100..1000).contains(&result) {
                     solutions[usize::try_from(result-100).unwrap()] = true;
-                    println!("{} * {} = {}", numbers[i], numbers[j], result);
                 }
                 
                 step(solutions, new_numbers);
@@ -115,7 +113,6 @@ fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
                     
                     if (100..1000).contains(&result) {
                         solutions[usize::try_from(result-100).unwrap()] = true;
-                        println!("{} - {} = {}", numbers[i], numbers[j], result);
                     }
                     
                     step(solutions, new_numbers);
@@ -131,7 +128,6 @@ fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
                     
                     if (100..1000).contains(&result) {
                         solutions[usize::try_from(result-100).unwrap()] = true;
-                        println!("{} - {} = {}", numbers[j], numbers[i], result);
                     }
                     
                     step(solutions, new_numbers);
@@ -148,7 +144,6 @@ fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
                     
                     if (100..1000).contains(&result) {
                         solutions[usize::try_from(result-100).unwrap()] = true;
-                        println!("{} / {} = {}", numbers[i], numbers[j], result);
                     }
                     
                     step(solutions, new_numbers);
@@ -165,7 +160,6 @@ fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
                     
                     if (100..1000).contains(&result) {
                         solutions[usize::try_from(result-100).unwrap()] = true;
-                        println!("{} / {} = {}", numbers[j], numbers[i], result);
                     }
                     
                     step(solutions, new_numbers);
