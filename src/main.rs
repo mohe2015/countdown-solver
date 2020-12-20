@@ -137,8 +137,10 @@ impl Iterator for OperatorCombinationIterator {
             
             let combination_complement = !self.combination;
             for i in 0..30 {
-                leaves += ((combination_complement >> i) & (self.combination >> (i/2+16))) & 1;
-                let invalid = ((combination_complement >> i) | (self.combination >> (i/2+16))) & 1 == 0;
+                let a = (combination_complement >> i);
+                let b = (self.combination >> (i/2+16));
+                leaves += (a & b) & 1;
+                let invalid = (a | b) & 1 == 0;
                 if invalid || leaves > 6 {
                     self.combination += 1;
                     continue 'outer;
@@ -194,5 +196,26 @@ fn generate_operator_orders() {
 fn main() {
     //println!("Hello, world!");
     //generate_numbers()
-    generate_operator_combinations()
+    alternative_generate_operator_combinations()
+}
+
+fn alternative_generate_operator_combinations() {
+    let mut counter: u64 = 0;
+    'outer: for combination in 0u64..(1 << 31) {
+
+        let mut leaves: u64 = 0;
+        
+        let combination_complement = !combination;
+        for i in 0..30 {
+            let a = (combination_complement >> i);
+            let b = (combination >> (i/2+16));
+            leaves += (a & b) & 1;
+            let invalid = (a | b) & 1 == 0;
+            if invalid || leaves > 6 {
+                continue 'outer;
+            }
+        }
+        counter += combination;
+    }
+    println!("{}", counter);
 }
