@@ -78,6 +78,7 @@ fn main() {
 // u32::MAX means empty as is shouldn't be reachable
 
 fn step(numbers: [i32; 6]) -> [u8; 128] {
+    //println!("{:?}", numbers);
     let is_cached = MEMOIZATION.with(|m| {
         if let Some(cached_solutions) = m.borrow_mut().get(&numbers) {
             Some(*cached_solutions)
@@ -92,6 +93,11 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
     let mut solutions = [0; 128];
 
     for i in 0..numbers.len() {
+        if (100..1000).contains(&numbers[i]) {
+            let index = usize::try_from(numbers[i] - 100).unwrap();
+            solutions[index/8] |= 1 << (index % 8);
+        }
+        
         if numbers[i] == i32::MAX {
             break;
         }
@@ -112,7 +118,7 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
 
                 let inner_solutions = step(new_numbers);
                 for i in 0..solutions.len() {
-                    solutions[i] |= inner_solutions[i];
+                        solutions[i] = solutions[i] | inner_solutions[i];
                 }
 
                 if (100..1000).contains(&result) {
@@ -133,7 +139,7 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
 
                 let inner_solutions = step(new_numbers);
                 for i in 0..solutions.len() {
-                    solutions[i] |= inner_solutions[i];
+                        solutions[i] = solutions[i] | inner_solutions[i];
                 }
 
                 if (100..1000).contains(&result) {
@@ -154,7 +160,7 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
 
                     let inner_solutions = step(new_numbers);
                     for i in 0..solutions.len() {
-                        solutions[i] |= inner_solutions[i];
+                        solutions[i] = solutions[i] | inner_solutions[i];
                     }
 
                     if (100..1000).contains(&result) {
@@ -176,7 +182,7 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
 
                     let inner_solutions = step(new_numbers);
                     for i in 0..solutions.len() {
-                        solutions[i] |= inner_solutions[i];
+                        solutions[i] = solutions[i] | inner_solutions[i];
                     }
 
                     if (100..1000).contains(&result) {
@@ -199,7 +205,7 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
 
                     let inner_solutions = step(new_numbers);
                     for i in 0..solutions.len() {
-                        solutions[i] |= inner_solutions[i];
+                        solutions[i] = solutions[i] | inner_solutions[i];
                     }
 
                     if (100..1000).contains(&result) {
@@ -222,7 +228,7 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
 
                     let inner_solutions = step(new_numbers);
                     for i in 0..solutions.len() {
-                        solutions[i] |= inner_solutions[i];
+                        solutions[i] = solutions[i] | inner_solutions[i];
                     }
 
                     if (100..1000).contains(&result) {
