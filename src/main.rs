@@ -13,8 +13,18 @@ fn generate_small_numbers(mut numbers: [i32; 6], index: usize, max_number: i32) 
         numbers[index] = x/2;
         
         if index == 5 {
-            // TODO call function
-            println!("{:?}", numbers);
+            print!("{:?}:", numbers);
+            
+            let mut solutions = [false; 900];
+            step(&mut solutions, [1, 3, 5, 25, 50, 100]);
+    
+            for (i, solution) in solutions.iter().enumerate() {
+                if !*solution {
+                    print!(" {}", i+100)
+                }
+            }
+            println!();
+            
         } else {
             generate_small_numbers(numbers, index + 1, x - 1);
         }
@@ -55,24 +65,13 @@ thread_local! {
 }
 
 fn main() {
-    //println!("Hello, world!");
-    //generate_numbers()
-    let mut solutions = [false; 900];
-    step(&mut solutions, [1, 3, 5, 25, 50, 100]);
+    generate_numbers();
     
-    MEMOIZATION.with(|m| {
+     MEMOIZATION.with(|m| {
          for (key, value) in &(*m.borrow()) {
             println!("{:?}: {}", key, value);
         }
     });
-    
-    for (i, solution) in solutions.iter().enumerate() {
-        if !*solution {
-            println!("{}", i+100)
-        }
-    }
-    
-    generate_numbers();
 }
 
 // log2(100*75*50*25*10*10) = 30
