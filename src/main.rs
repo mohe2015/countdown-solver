@@ -4,10 +4,8 @@ use std::cell::RefCell;
 
 
 fn generate_small_numbers(mut numbers: [i32; 6], index: usize, max_number: i32) {
-    // TODO FIXME don't use at all?
-
-    for x in (2..max_number).rev() {
-        if x % 2 == 0 && numbers[index-1] != x { continue; }
+    for x in (2..max_number+1).rev() {
+        if x % 2 == 0 && numbers[index-1] != x/2 { continue; }
         
         // 1 = 2, 3
         // 10 = 20, 21
@@ -18,7 +16,7 @@ fn generate_small_numbers(mut numbers: [i32; 6], index: usize, max_number: i32) 
             // TODO call function
             println!("{:?}", numbers);
         } else {
-            generate_small_numbers(numbers, index + 1, x-1);
+            generate_small_numbers(numbers, index + 1, x - 1);
         }
     }
 }
@@ -47,7 +45,7 @@ fn generate_numbers() {
     const INDEX: [usize; 15] = [1,1,1,1,2,2,2,2,2,2,3,3,3,3,4];
     
     for i in 0..MAJOR_NUMBERS.len() {
-        generate_small_numbers(MAJOR_NUMBERS[i], INDEX[i], 22);
+        generate_small_numbers(MAJOR_NUMBERS[i], INDEX[i], 21);
     }
 }
 
