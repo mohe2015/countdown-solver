@@ -1,62 +1,51 @@
-use std::convert::TryInto;
 use std::convert::TryFrom;
 use std::collections::HashMap;
 use std::cell::RefCell;
 
-struct CountdownNumberIterator {
-    permutation: u32
-}
 
-impl Iterator for CountdownNumberIterator {
-    type Item = [u8; 6];
+fn generate_small_numbers(mut numbers: [i32; 6], index: usize, max_number: i32) {
+    if index == 6 {
+        // TODO call function
+        println!("{:?}", numbers);
+        return;   
+    }
 
-    fn next(&mut self) -> Option<[u8; 6]> {
-        // this array would be about 1MB of storage
+    // TODO FIXME don't use at all?
 
-        // only sort ascending which prevents duplicates
-
-        // TODO CHECK
-        const MAJOR_NUMBERS: [[u8; 6]; 16] = [
-            [0, 0, 0,  0,  0,  25 ],
-            [0, 0, 0,  0,  0,  50 ],
-            [0, 0, 0,  0,  0,  75 ],
-            [0, 0, 0,  0,  0,  100],
-            [0, 0, 0,  0,  25, 50 ],
-            [0, 0, 0,  0,  25, 75 ],
-            [0, 0, 0,  0,  25, 100],
-            [0, 0, 0,  0,  50, 75 ],
-            [0, 0, 0,  0,  50, 100],
-            [0, 0, 0,  0,  75, 100],
-            [0, 0, 0,  25, 50, 75 ],
-            [0, 0, 0,  25, 50, 75 ],
-            [0, 0, 0,  25, 50, 100],
-            [0, 0, 0,  25, 75, 100],
-            [0, 0, 0,  50, 75, 100],
-            [0, 0, 25, 50, 75, 100]
-        ];
-
-        // TODO CHECK
-        const LENGTH: [usize; 16] = [5,5,5,5,4,4,4,4,4,4,3,3,3,3,3,2];
-
-        let big_number_permutation: usize = ((self.permutation >> 22) & 0b1111).try_into().unwrap(); // TODO FIXME I don't understand why I need this
-        let mut result = MAJOR_NUMBERS[big_number_permutation]; // TODO FIXME does this break the original array contentes?
-        let length = LENGTH[big_number_permutation];
-
-        None
+    for x in (0..max_number).rev() {
+        numbers[index] = x/2;
+        generate_small_numbers(numbers, index + 1, x-1);
     }
 }
 
 fn generate_numbers() {
-    let countdown_numbers = CountdownNumberIterator {
-        permutation: 0
-    };
-    let mut counter: u64 = 0;
-    for numbers in countdown_numbers {
-        counter = counter + u64::from(numbers[0]); 
-        //println!("{:?}", numbers);
+    // TODO CHECK
+    const MAJOR_NUMBERS: [[i32; 6]; 15] = [
+        [ 25, 0,  0,  0,  0,  0, ],
+        [ 50, 0,  0,  0,  0,  0, ],
+        [ 75 ,0,  0,  0,  0,  0, ],
+        [ 100,0,  0,  0,  0,  0, ],
+        [ 25, 50, 0,  0,  0,  0, ],
+        [ 25, 75, 0,  0,  0,  0, ],
+        [ 25, 100,0,  0,  0,  0, ],
+        [ 50, 75, 0,  0,  0,  0, ],
+        [ 50, 100,0,  0,  0,  0, ],
+        [ 75, 100,0,  0,  0,  0, ],
+        [ 25, 50, 75, 0,  0,  0, ],
+        [ 25, 50, 100,0,  0,  0, ],
+        [ 25, 75, 100,0,  0,  0, ],
+        [ 50, 75, 100,0,  0,  0, ],
+        [ 25, 50, 75, 100,0,  0, ]
+    ];
+
+    // TODO CHECK
+    const INDEX: [usize; 15] = [1,1,1,1,2,2,2,2,2,2,3,3,3,3,4];
+    
+    for i in 0..MAJOR_NUMBERS.len() {
+        generate_small_numbers(MAJOR_NUMBERS[i], INDEX[i], 20);
     }
-    println!("{}", counter);
 }
+
 
 thread_local! {
     pub static MEMOIZATION: RefCell<HashMap<[i32; 6], u32>> = RefCell::new(HashMap::new());
@@ -67,16 +56,20 @@ fn main() {
     //generate_numbers()
     let mut solutions = [false; 900];
     step(&mut solutions, [1, 3, 5, 25, 50, 100]);
-    for (i, solution) in solutions.iter().enumerate() {
-        if !*solution {
-            println!("{}", i+100)
-        }
-    }
+    
     MEMOIZATION.with(|m| {
          for (key, value) in &(*m.borrow()) {
             println!("{:?}: {}", key, value);
         }
     });
+    
+    for (i, solution) in solutions.iter().enumerate() {
+        if !*solution {
+            println!("{}", i+100)
+        }
+    }
+    
+    generate_numbers();
 }
 
 // log2(100*75*50*25*10*10) = 30
