@@ -85,21 +85,23 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
     });
     
     for i in 0..numbers.len() {
-        if numbers[i] == i32::MAX { continue };
+        if numbers[i] == i32::MAX { break; }
         for j in i+1..numbers.len() {
-            if numbers[j] == i32::MAX { continue; } // TODO change this to break after below change
+            if numbers[j] == i32::MAX { break; }
             
             {
                 let result = numbers[i] + numbers[j];
-            
-                let mut new_numbers = numbers;
-                new_numbers[i] = result;
-                new_numbers[j] = i32::MAX;
-                // TODO FIXME shift the others to the left so the empty ones are at the right
                 
                 if (100..1000).contains(&result) {
                     solutions[usize::try_from(result-100).unwrap()] = true;
                 }
+            
+                let mut new_numbers = numbers;
+                new_numbers[i] = result;
+                for k in i..new_numbers.len()-1 {
+                    new_numbers[k] = new_numbers[k+1];
+                }
+                new_numbers[new_numbers.len()-1] = i32::MAX;
                 
                 step(solutions, new_numbers);
             }
@@ -107,13 +109,16 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
             {
                 let result = numbers[i] * numbers[j];
                 
-                let mut new_numbers = numbers;
-                new_numbers[i] = result;
-                new_numbers[j] = i32::MAX;
-                
                 if (100..1000).contains(&result) {
                     solutions[usize::try_from(result-100).unwrap()] = true;
                 }
+                
+                let mut new_numbers = numbers;
+                new_numbers[i] = result;
+                for k in i..new_numbers.len()-1 {
+                    new_numbers[k] = new_numbers[k+1];
+                }
+                new_numbers[new_numbers.len()-1] = i32::MAX;
                 
                 step(solutions, new_numbers);
             }
@@ -121,13 +126,17 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
             {
                 let result = numbers[i] - numbers[j];
                 if result >= 0 {
-                    let mut new_numbers = numbers;
-                    new_numbers[i] = result;
-                    new_numbers[j] = i32::MAX;
                     
                     if (100..1000).contains(&result) {
                         solutions[usize::try_from(result-100).unwrap()] = true;
                     }
+                    
+                    let mut new_numbers = numbers;
+                    new_numbers[i] = result;
+                    for k in i..new_numbers.len()-1 {
+                        new_numbers[k] = new_numbers[k+1];
+                    }
+                    new_numbers[new_numbers.len()-1] = i32::MAX;
                     
                     step(solutions, new_numbers);
                 }
@@ -136,13 +145,16 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
             {
                 let result = numbers[j] - numbers[i];
                 if result >= 0 {
-                    let mut new_numbers = numbers;
-                    new_numbers[i] = result;
-                    new_numbers[j] = i32::MAX;
-                    
                     if (100..1000).contains(&result) {
                         solutions[usize::try_from(result-100).unwrap()] = true;
                     }
+                    
+                    let mut new_numbers = numbers;
+                    new_numbers[i] = result;
+                    for k in i..new_numbers.len()-1 {
+                        new_numbers[k] = new_numbers[k+1];
+                    }
+                    new_numbers[new_numbers.len()-1] = i32::MAX;
                     
                     step(solutions, new_numbers);
                 }
@@ -152,13 +164,16 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
                 if numbers[j] != 0 && numbers[i] % numbers[j] == 0 {
                     let result = numbers[i] / numbers[j];
                     
-                    let mut new_numbers = numbers;
-                    new_numbers[i] = result;
-                    new_numbers[j] = i32::MAX;
-                    
                     if (100..1000).contains(&result) {
                         solutions[usize::try_from(result-100).unwrap()] = true;
                     }
+                    
+                    let mut new_numbers = numbers;
+                    new_numbers[i] = result;
+                    for k in i..new_numbers.len()-1 {
+                        new_numbers[k] = new_numbers[k+1];
+                    }
+                    new_numbers[new_numbers.len()-1] = i32::MAX;
                     
                     step(solutions, new_numbers);
                 }
@@ -168,13 +183,16 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
                 if numbers[i] != 0 && numbers[j] % numbers[i] == 0 {
                     let result = numbers[j] / numbers[i];
     
-                    let mut new_numbers = numbers;
-                    new_numbers[i] = result;
-                    new_numbers[j] = i32::MAX;
-                    
                     if (100..1000).contains(&result) {
                         solutions[usize::try_from(result-100).unwrap()] = true;
                     }
+                    
+                    let mut new_numbers = numbers;
+                    new_numbers[i] = result;
+                    for k in i..new_numbers.len()-1 {
+                        new_numbers[k] = new_numbers[k+1];
+                    }
+                    new_numbers[new_numbers.len()-1] = i32::MAX;
                     
                     step(solutions, new_numbers);
                 }
