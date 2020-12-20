@@ -1,4 +1,5 @@
 use std::convert::TryInto;
+use std::convert::TryFrom;
 
 struct CountdownNumberIterator {
     permutation: u32
@@ -196,7 +197,13 @@ fn generate_operator_orders() {
 fn main() {
     //println!("Hello, world!");
     //generate_numbers()
-    step([false; 900], [1, 3, 5, 25, 50, 100]);
+    let mut solutions = [false; 900];
+    step(&mut solutions, [1, 3, 5, 25, 50, 100]);
+    for (i, solution) in solutions.iter().enumerate() {
+        if *solution {
+            println!("{}", i+100)
+        }
+    }
 }
 
 fn alternative_generate_operator_combinations() {
@@ -223,7 +230,7 @@ fn alternative_generate_operator_combinations() {
 
 // log2(100*75*50*25*10*10) = 30
 // u32::MAX means empty as is shouldn't be reachable
-fn step(solutions: [bool; 900], numbers: [u32; 6]) {
+fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
     for i in 0..numbers.len() {
         if numbers[i] == u32::MAX { continue };
         for j in i+1..numbers.len() {
@@ -235,7 +242,7 @@ fn step(solutions: [bool; 900], numbers: [u32; 6]) {
                 new_numbers[i] = addition;
                 new_numbers[j] = u32::MAX;
                 
-                //new_solutions[addition-100] = true;
+                solutions[usize::try_from(addition-100).unwrap()] = true;
                 println!("{} + {} = {}", numbers[i], numbers[j], addition);
                 
                 step(solutions, new_numbers);
