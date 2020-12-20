@@ -12,6 +12,12 @@ RUSTFLAGS="-C target-cpu=native" cargo build --release
 
 ```
 
+# Running
+
+```bash
+time ./target/release/countdown-solver | tee -a result
+```
+
 # Profiling
 
 ```bash
