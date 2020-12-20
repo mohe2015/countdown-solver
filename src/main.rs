@@ -128,7 +128,7 @@ impl Iterator for OperatorCombinationIterator {
 
         // top down should be more efficient?
         
-        loop {
+        'outer: loop {
             if self.combination & (1 << 31) != 0 {
                 return None;
             }
@@ -140,12 +140,13 @@ impl Iterator for OperatorCombinationIterator {
             for i in 0..30 {
                 leaves += ((combination_complement >> i) & (self.combination >> (i/2+16))) & 1;
                 valid &= (combination_complement >> i) | (self.combination >> (i/2+16));
+                if (valid & 1) == 0 || leaves > 6 {
+                    continue 'outer;
+                }
             }
 
             self.combination += 1;
-            if ((valid & 1) == 1) && leaves <= 6 {
-                break;
-            }
+            break;
         }
 
         Some(self.combination)
@@ -158,7 +159,7 @@ fn generate_operator_combinations() {
     };
     let mut counter: u64 = 0;
     for combination in operator_combinations {
-        counter = counter + u64::from(combination); 
+        counter += u64::from(combination); 
         //println!("{}", combination);
     }
     println!("{}", counter);
