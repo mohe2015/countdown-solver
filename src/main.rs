@@ -238,34 +238,32 @@ fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
             
             {
                 let result = numbers[i] + numbers[j];
-                if result > 0 {
-                    let mut new_numbers = numbers;
-                    new_numbers[i] = result;
-                    new_numbers[j] = u32::MAX;
-                    
-                    if (100..1000).contains(&result) {
-                        solutions[usize::try_from(result-100).unwrap()] = true;
-                        println!("{} + {} = {}", numbers[i], numbers[j], result);
-                    }
-                    
-                    step(solutions, new_numbers);
+            
+                let mut new_numbers = numbers;
+                new_numbers[i] = result;
+                new_numbers[j] = u32::MAX;
+                
+                if (100..1000).contains(&result) {
+                    solutions[usize::try_from(result-100).unwrap()] = true;
+                    println!("{} + {} = {}", numbers[i], numbers[j], result);
                 }
+                
+                step(solutions, new_numbers);
             }
             
             {
                 let result = numbers[i] * numbers[j];
-                if result > 0 {
-                    let mut new_numbers = numbers;
-                    new_numbers[i] = result;
-                    new_numbers[j] = u32::MAX;
-                    
-                    if (100..1000).contains(&result) {
-                        solutions[usize::try_from(result-100).unwrap()] = true;
-                        println!("{} * {} = {}", numbers[i], numbers[j], result);
-                    }
-                    
-                    step(solutions, new_numbers);
+                
+                let mut new_numbers = numbers;
+                new_numbers[i] = result;
+                new_numbers[j] = u32::MAX;
+                
+                if (100..1000).contains(&result) {
+                    solutions[usize::try_from(result-100).unwrap()] = true;
+                    println!("{} * {} = {}", numbers[i], numbers[j], result);
                 }
+                
+                step(solutions, new_numbers);
             }
             
             {
@@ -300,10 +298,10 @@ fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
                 }
             }
             
-            // TODO FIXME check no remainder
             {
-                let result = numbers[i] / numbers[j];
-                if result > 0 {
+                if numbers[j] != 0 && numbers[i] % numbers[j] == 0 {
+                    let result = numbers[i] / numbers[j];
+                    
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
                     new_numbers[j] = u32::MAX;
@@ -318,8 +316,9 @@ fn step(solutions: &mut [bool; 900], numbers: [u32; 6]) {
             }
             
             {
-                let result = numbers[j] - numbers[i];
-                if result > 0 {
+                if numbers[i] != 0 && numbers[j] % numbers[i] == 0 {
+                    let result = numbers[j] / numbers[i];
+    
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
                     new_numbers[j] = u32::MAX;
