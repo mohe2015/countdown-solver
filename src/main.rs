@@ -18,8 +18,8 @@ fn generate_small_numbers(mut numbers: [i32; 6], index: usize, max_number: i32) 
 
             let solutions = step(numbers);
 
-            for (i, solution) in solutions.iter().enumerate() {
-                if !*solution {
+            for i in 0..900 {
+                if ((solutions[index / 8] >> (i % 8)) & 1) == 0 {
                     print!("{},", i + 100)
                 }
             }
@@ -59,7 +59,7 @@ fn generate_numbers() {
 }
 
 thread_local! {
-    pub static MEMOIZATION: RefCell<HashMap<[i32; 6], [bool; 900]>> = RefCell::new(HashMap::new());
+    pub static MEMOIZATION: RefCell<HashMap<[i32; 6], [u8; 128]>> = RefCell::new(HashMap::new());
 }
 
 fn main() {
@@ -77,7 +77,7 @@ fn main() {
 // log2(100*75*50*25*10*10) = 30
 // u32::MAX means empty as is shouldn't be reachable
 
-fn step(numbers: [i32; 6]) -> [bool; 900] {
+fn step(numbers: [i32; 6]) -> [u8; 128] {
     let is_cached = MEMOIZATION.with(|m| {
         if let Some(cached_solutions) = m.borrow_mut().get(&numbers) {
             Some(*cached_solutions)
@@ -89,7 +89,7 @@ fn step(numbers: [i32; 6]) -> [bool; 900] {
         return solutions;
     }
 
-    let mut solutions = [false; 900];
+    let mut solutions = [0; 128];
 
     for i in 0..numbers.len() {
         if numbers[i] == i32::MAX {
@@ -116,7 +116,8 @@ fn step(numbers: [i32; 6]) -> [bool; 900] {
                 }
 
                 if (100..1000).contains(&result) {
-                    solutions[usize::try_from(result - 100).unwrap()] = true;
+                    let index = usize::try_from(result - 100).unwrap();
+                    solutions[index/8] |= 1 << (index % 8);
                 }
             }
 
@@ -136,7 +137,8 @@ fn step(numbers: [i32; 6]) -> [bool; 900] {
                 }
 
                 if (100..1000).contains(&result) {
-                    solutions[usize::try_from(result - 100).unwrap()] = true;
+                    let index = usize::try_from(result - 100).unwrap();
+                    solutions[index/8] |= 1 << (index % 8);
                 }
             }
 
@@ -156,7 +158,8 @@ fn step(numbers: [i32; 6]) -> [bool; 900] {
                     }
 
                     if (100..1000).contains(&result) {
-                        solutions[usize::try_from(result - 100).unwrap()] = true;
+                        let index = usize::try_from(result - 100).unwrap();
+                        solutions[index/8] |= 1 << (index % 8);
                     }
                 }
             }
@@ -177,7 +180,8 @@ fn step(numbers: [i32; 6]) -> [bool; 900] {
                     }
 
                     if (100..1000).contains(&result) {
-                        solutions[usize::try_from(result - 100).unwrap()] = true;
+                        let index = usize::try_from(result - 100).unwrap();
+                        solutions[index/8] |= 1 << (index % 8);
                     }
                 }
             }
@@ -199,7 +203,8 @@ fn step(numbers: [i32; 6]) -> [bool; 900] {
                     }
 
                     if (100..1000).contains(&result) {
-                        solutions[usize::try_from(result - 100).unwrap()] = true;
+                        let index = usize::try_from(result - 100).unwrap();
+                        solutions[index/8] |= 1 << (index % 8);
                     }
                 }
             }
@@ -221,7 +226,8 @@ fn step(numbers: [i32; 6]) -> [bool; 900] {
                     }
 
                     if (100..1000).contains(&result) {
-                        solutions[usize::try_from(result - 100).unwrap()] = true;
+                        let index = usize::try_from(result - 100).unwrap();
+                        solutions[index/8] |= 1 << (index % 8);
                     }
                 }
             }
