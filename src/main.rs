@@ -13,17 +13,17 @@ fn generate_small_numbers(mut numbers: [i32; 6], index: usize, max_number: i32) 
         numbers[index] = x/2;
         
         if index == 5 {
-            print!("{:?}:", numbers);
+            print!("{{key: {:?}, value: [", numbers);
             
             let mut solutions = [false; 900];
             step(&mut solutions, numbers);
     
             for (i, solution) in solutions.iter().enumerate() {
                 if !*solution {
-                    print!(" {}", i+100)
+                    print!("{},", i+100)
                 }
             }
-            println!();
+            println!("]}},");
             
         } else {
             generate_small_numbers(numbers, index + 1, x - 1);
@@ -65,11 +65,13 @@ thread_local! {
 }
 
 fn main() {
+    println!("[");
     generate_numbers();
+    println!("]");
     
      MEMOIZATION.with(|m| {
          for (key, value) in &(*m.borrow()) {
-            println!("{:?}: {}", key, value);
+            eprintln!("{:?}: {}", key, value);
         }
     });
 }
@@ -85,7 +87,7 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
     for i in 0..numbers.len() {
         if numbers[i] == i32::MAX { continue };
         for j in i+1..numbers.len() {
-            if numbers[j] == i32::MAX { continue; }
+            if numbers[j] == i32::MAX { continue; } // TODO change this to break after below change
             
             {
                 let result = numbers[i] + numbers[j];
@@ -93,6 +95,7 @@ fn step(solutions: &mut [bool; 900], numbers: [i32; 6]) {
                 let mut new_numbers = numbers;
                 new_numbers[i] = result;
                 new_numbers[j] = i32::MAX;
+                // TODO FIXME shift the others to the left so the empty ones are at the right
                 
                 if (100..1000).contains(&result) {
                     solutions[usize::try_from(result-100).unwrap()] = true;
