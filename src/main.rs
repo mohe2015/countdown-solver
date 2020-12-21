@@ -34,7 +34,8 @@ fn generate_small_numbers(mut numbers: [i32; 6], index: usize, max_number: i32) 
 
 fn generate_numbers() {
     // TODO CHECK
-    const MAJOR_NUMBERS: [[i32; 6]; 15] = [
+    const MAJOR_NUMBERS: [[i32; 6]; 16] = [
+        [0, 0, 0, 0, 0, 0],
         [25, 0, 0, 0, 0, 0],
         [50, 0, 0, 0, 0, 0],
         [75, 0, 0, 0, 0, 0],
@@ -53,7 +54,7 @@ fn generate_numbers() {
     ];
 
     // TODO CHECK
-    const INDEX: [usize; 15] = [1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4];
+    const INDEX: [usize; 16] = [0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4];
 
     for i in 0..MAJOR_NUMBERS.len() {
         generate_small_numbers(MAJOR_NUMBERS[i], INDEX[i], 21);
