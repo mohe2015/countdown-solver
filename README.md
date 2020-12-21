@@ -1,6 +1,6 @@
 # countdown-solver
 
-Credits for the idea to Matt H from the [youtube video](https://www.youtube.com/watch?v=cVMhkqPP2YI)'s comments about this game.
+Credits for the idea to Matt H from the [youtube video](https://www.youtube.com/watch?v=cVMhkqPP2YI)'s comments about this game. More information can also be fount at https://en.wikipedia.org/wiki/Countdown_(game_show)#Numbers_round.
 
 # Current issues
 
