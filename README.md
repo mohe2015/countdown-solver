@@ -1,5 +1,7 @@
 # countdown-solver
 
+Credits for the idea to Matt H from the youtube video https://www.youtube.com/watch?v=cVMhkqPP2YI about this game.
+
 # Current issues
 
 ```bash
