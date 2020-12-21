@@ -12,3 +12,4 @@ Cargo.lock
 *.autosave.xopp
 callgrind.out.*
 *.xopp~
+result*

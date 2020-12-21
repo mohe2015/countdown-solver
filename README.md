@@ -1,5 +1,17 @@
 # countdown-solver
 
+# Current issues
+
+```bash
+sort result_memoization_cached | uniq -d -c
+```
+
+# Eclipse
+
+```bash
+nix shell nixpkgs#rustup nixpkgs#eclipses.eclipse-rust --command eclipse
+```
+
 # TODO
 
 profile guided optimization
