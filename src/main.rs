@@ -187,25 +187,17 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
                         }
                     }
                 };
-                
-                // optimization
-                if amount_of_numbers == 2 {
-                    if (100..1000).contains(&result) {
-                        let index = usize::try_from(result - 100).unwrap();
-                        solutions[index / 8] |= 1 << (index % 8);
-                    }
-                } else {
-                    let mut new_numbers = numbers;
-                    new_numbers[i] = result;
-                    for k in j..new_numbers.len() - 1 {
-                        new_numbers[k] = new_numbers[k + 1];
-                    }
-                    new_numbers[new_numbers.len() - 1] = i32::MAX;
-    
-                    let inner_solutions = step(new_numbers);
-                    for k in 0..solutions.len() {
-                        solutions[k] |= inner_solutions[k];
-                    }
+                          
+                let mut new_numbers = numbers;
+                new_numbers[i] = result;
+                for k in j..new_numbers.len() - 1 {
+                    new_numbers[k] = new_numbers[k + 1];
+                }
+                new_numbers[new_numbers.len() - 1] = i32::MAX;
+
+                let inner_solutions = step(new_numbers);
+                for k in 0..solutions.len() {
+                    solutions[k] |= inner_solutions[k];
                 }
             }
         }
