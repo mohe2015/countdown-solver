@@ -1,5 +1,11 @@
 # countdown-solver
 
+# Eclipse
+
+```bash
+nix shell nixpkgs#rustup nixpkgs#eclipses.eclipse-rust --command eclipse
+```
+
 # TODO
 
 profile guided optimization

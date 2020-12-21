@@ -93,14 +93,15 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
     let mut solutions = [0; 128];
 
     for i in 0..numbers.len() {
+        if numbers[i] == i32::MAX {
+            break;
+        }
+        
         if (100..1000).contains(&numbers[i]) {
             let index = usize::try_from(numbers[i] - 100).unwrap();
             solutions[index/8] |= 1 << (index % 8);
         }
         
-        if numbers[i] == i32::MAX {
-            break;
-        }
         for j in i + 1..numbers.len() {
             if numbers[j] == i32::MAX {
                 break;
@@ -111,7 +112,7 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
 
                 let mut new_numbers = numbers;
                 new_numbers[i] = result;
-                for k in i + 1..new_numbers.len() - 1 {
+                for k in j..new_numbers.len() - 1 {
                     new_numbers[k] = new_numbers[k + 1];
                 }
                 new_numbers[new_numbers.len() - 1] = i32::MAX;
@@ -128,11 +129,14 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
             }
 
             {
+                // i = 0
+                // j = 3
+                
                 let result = numbers[i] * numbers[j];
 
                 let mut new_numbers = numbers;
                 new_numbers[i] = result;
-                for k in i + 1..new_numbers.len() - 1 {
+                for k in j..new_numbers.len() - 1 {
                     new_numbers[k] = new_numbers[k + 1];
                 }
                 new_numbers[new_numbers.len() - 1] = i32::MAX;
@@ -153,7 +157,7 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
                 if result >= 0 {
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
-                    for k in i + 1..new_numbers.len() - 1 {
+                    for k in j..new_numbers.len() - 1 {
                         new_numbers[k] = new_numbers[k + 1];
                     }
                     new_numbers[new_numbers.len() - 1] = i32::MAX;
@@ -175,7 +179,7 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
                 if result >= 0 {
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
-                    for k in i + 1..new_numbers.len() - 1 {
+                    for k in j..new_numbers.len() - 1 {
                         new_numbers[k] = new_numbers[k + 1];
                     }
                     new_numbers[new_numbers.len() - 1] = i32::MAX;
@@ -198,7 +202,7 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
 
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
-                    for k in i + 1..new_numbers.len() - 1 {
+                    for k in j..new_numbers.len() - 1 {
                         new_numbers[k] = new_numbers[k + 1];
                     }
                     new_numbers[new_numbers.len() - 1] = i32::MAX;
@@ -221,7 +225,7 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
 
                     let mut new_numbers = numbers;
                     new_numbers[i] = result;
-                    for k in i + 1..new_numbers.len() - 1 {
+                    for k in j..new_numbers.len() - 1 {
                         new_numbers[k] = new_numbers[k + 1];
                     }
                     new_numbers[new_numbers.len() - 1] = i32::MAX;
