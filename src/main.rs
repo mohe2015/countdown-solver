@@ -79,6 +79,10 @@ fn main() {
 // log2(100*75*50*25*10*10) = 30
 // u32::MAX means empty as is shouldn't be reachable
 
+enum Operation {
+    ADDITION, MULTIPLICATION, SUBTRACTION, ReverseSubtraction, DIVISION, ReverseDivision
+}
+
 fn step(numbers: [i32; 6]) -> [u8; 128] {
     //println!("{:?}", numbers);
     let is_cached = MEMOIZATION.with(|m| {
@@ -109,9 +113,39 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
                 break;
             }
 
-            {
-                let result = numbers[i] + numbers[j];
-
+            for operation in &[Operation::ADDITION, Operation::MULTIPLICATION, Operation::SUBTRACTION, Operation::ReverseSubtraction, Operation::DIVISION, Operation::ReverseDivision] {
+                let result = match operation {
+                    Operation::ADDITION => {
+                        numbers[i] + numbers[j]
+                    }
+                    Operation::MULTIPLICATION => {
+                        numbers[i] * numbers[j]
+                    }
+                    Operation::SUBTRACTION => {
+                        let result = numbers[i] - numbers[j];
+                        if result < 0 { continue; }
+                        result
+                    }
+                    Operation::ReverseSubtraction => {
+                        let result = numbers[j] - numbers[i];
+                        if result < 0 { continue; }
+                        result
+                    }
+                    Operation::DIVISION => {
+                        if numbers[j] != 0 && numbers[i] % numbers[j] == 0 {
+                            numbers[i] / numbers[j]
+                        } else {
+                            continue;
+                        }
+                    }
+                    Operation::ReverseDivision => {
+                        if numbers[i] != 0 && numbers[j] % numbers[i] == 0 {
+                            numbers[j] / numbers[i]
+                        } else {
+                            continue;
+                        }
+                    }
+                };
                 let mut new_numbers = numbers;
                 new_numbers[i] = result;
                 for k in j..new_numbers.len() - 1 {
@@ -120,127 +154,8 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
                 new_numbers[new_numbers.len() - 1] = i32::MAX;
 
                 let inner_solutions = step(new_numbers);
-                for i in 0..solutions.len() {
-                        solutions[i] = solutions[i] | inner_solutions[i];
-                }
-
-                if (100..1000).contains(&result) {
-                    let index = usize::try_from(result - 100).unwrap();
-                    solutions[index/8] |= 1 << (index % 8);
-                }
-            }
-
-            {
-                // i = 0
-                // j = 3
-                
-                let result = numbers[i] * numbers[j];
-
-                let mut new_numbers = numbers;
-                new_numbers[i] = result;
-                for k in j..new_numbers.len() - 1 {
-                    new_numbers[k] = new_numbers[k + 1];
-                }
-                new_numbers[new_numbers.len() - 1] = i32::MAX;
-
-                let inner_solutions = step(new_numbers);
-                for i in 0..solutions.len() {
-                        solutions[i] = solutions[i] | inner_solutions[i];
-                }
-
-                if (100..1000).contains(&result) {
-                    let index = usize::try_from(result - 100).unwrap();
-                    solutions[index/8] |= 1 << (index % 8);
-                }
-            }
-
-            {
-                let result = numbers[i] - numbers[j];
-                if result >= 0 {
-                    let mut new_numbers = numbers;
-                    new_numbers[i] = result;
-                    for k in j..new_numbers.len() - 1 {
-                        new_numbers[k] = new_numbers[k + 1];
-                    }
-                    new_numbers[new_numbers.len() - 1] = i32::MAX;
-
-                    let inner_solutions = step(new_numbers);
-                    for i in 0..solutions.len() {
-                        solutions[i] = solutions[i] | inner_solutions[i];
-                    }
-
-                    if (100..1000).contains(&result) {
-                        let index = usize::try_from(result - 100).unwrap();
-                        solutions[index/8] |= 1 << (index % 8);
-                    }
-                }
-            }
-
-            {
-                let result = numbers[j] - numbers[i];
-                if result >= 0 {
-                    let mut new_numbers = numbers;
-                    new_numbers[i] = result;
-                    for k in j..new_numbers.len() - 1 {
-                        new_numbers[k] = new_numbers[k + 1];
-                    }
-                    new_numbers[new_numbers.len() - 1] = i32::MAX;
-
-                    let inner_solutions = step(new_numbers);
-                    for i in 0..solutions.len() {
-                        solutions[i] = solutions[i] | inner_solutions[i];
-                    }
-
-                    if (100..1000).contains(&result) {
-                        let index = usize::try_from(result - 100).unwrap();
-                        solutions[index/8] |= 1 << (index % 8);
-                    }
-                }
-            }
-
-            {
-                if numbers[j] != 0 && numbers[i] % numbers[j] == 0 {
-                    let result = numbers[i] / numbers[j];
-
-                    let mut new_numbers = numbers;
-                    new_numbers[i] = result;
-                    for k in j..new_numbers.len() - 1 {
-                        new_numbers[k] = new_numbers[k + 1];
-                    }
-                    new_numbers[new_numbers.len() - 1] = i32::MAX;
-
-                    let inner_solutions = step(new_numbers);
-                    for i in 0..solutions.len() {
-                        solutions[i] = solutions[i] | inner_solutions[i];
-                    }
-
-                    if (100..1000).contains(&result) {
-                        let index = usize::try_from(result - 100).unwrap();
-                        solutions[index/8] |= 1 << (index % 8);
-                    }
-                }
-            }
-
-            {
-                if numbers[i] != 0 && numbers[j] % numbers[i] == 0 {
-                    let result = numbers[j] / numbers[i];
-
-                    let mut new_numbers = numbers;
-                    new_numbers[i] = result;
-                    for k in j..new_numbers.len() - 1 {
-                        new_numbers[k] = new_numbers[k + 1];
-                    }
-                    new_numbers[new_numbers.len() - 1] = i32::MAX;
-
-                    let inner_solutions = step(new_numbers);
-                    for i in 0..solutions.len() {
-                        solutions[i] = solutions[i] | inner_solutions[i];
-                    }
-
-                    if (100..1000).contains(&result) {
-                        let index = usize::try_from(result - 100).unwrap();
-                        solutions[index/8] |= 1 << (index % 8);
-                    }
+                for k in 0..solutions.len() {
+                        solutions[k] = solutions[k] | inner_solutions[k];
                 }
             }
         }
