@@ -6,7 +6,7 @@ use std::convert::TryFrom;
 
 fn generate_small_numbers(mut numbers: [i32; 6], index: usize, max_number: i32) {
     for x in (2..max_number + 1).rev() {
-        if x % 2 == 0 && index != 0 && numbers[index - 1] != x / 2 {
+        if x % 2 == 0 && (index == 0 || numbers[index - 1] != x / 2) {
             continue;
         }
 
