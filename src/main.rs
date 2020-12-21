@@ -33,8 +33,8 @@ fn generate_small_numbers(mut numbers: [i32; 6], index: usize, max_number: i32) 
 }
 /*
 fn generate_big_numbers(numbers: [i32; 6], min_removed_number: i32) {
-    
-    
+
+
     // maybe always remove one of them?
     // only remove smaller numbers in subsequent invocations?
 }
@@ -88,7 +88,12 @@ fn main() {
 // u32::MAX means empty as is shouldn't be reachable
 
 enum Operation {
-    ADDITION, MULTIPLICATION, SUBTRACTION, ReverseSubtraction, DIVISION, ReverseDivision
+    ADDITION,
+    MULTIPLICATION,
+    SUBTRACTION,
+    ReverseSubtraction,
+    DIVISION,
+    ReverseDivision,
 }
 
 fn step(numbers: [i32; 6]) -> [u8; 128] {
@@ -110,33 +115,40 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
         if numbers[i] == i32::MAX {
             break;
         }
-        
+
         if (100..1000).contains(&numbers[i]) {
             let index = usize::try_from(numbers[i] - 100).unwrap();
-            solutions[index/8] |= 1 << (index % 8);
+            solutions[index / 8] |= 1 << (index % 8);
         }
-        
+
         for j in i + 1..numbers.len() {
             if numbers[j] == i32::MAX {
                 break;
             }
 
-            for operation in &[Operation::ADDITION, Operation::MULTIPLICATION, Operation::SUBTRACTION, Operation::ReverseSubtraction, Operation::DIVISION, Operation::ReverseDivision] {
+            for operation in &[
+                Operation::ADDITION,
+                Operation::MULTIPLICATION,
+                Operation::SUBTRACTION,
+                Operation::ReverseSubtraction,
+                Operation::DIVISION,
+                Operation::ReverseDivision,
+            ] {
                 let result = match operation {
-                    Operation::ADDITION => {
-                        numbers[i] + numbers[j]
-                    }
-                    Operation::MULTIPLICATION => {
-                        numbers[i] * numbers[j]
-                    }
+                    Operation::ADDITION => numbers[i] + numbers[j],
+                    Operation::MULTIPLICATION => numbers[i] * numbers[j],
                     Operation::SUBTRACTION => {
                         let result = numbers[i] - numbers[j];
-                        if result < 0 { continue; }
+                        if result < 0 {
+                            continue;
+                        }
                         result
                     }
                     Operation::ReverseSubtraction => {
                         let result = numbers[j] - numbers[i];
-                        if result < 0 { continue; }
+                        if result < 0 {
+                            continue;
+                        }
                         result
                     }
                     Operation::DIVISION => {
@@ -163,15 +175,15 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
 
                 let inner_solutions = step(new_numbers);
                 for k in 0..solutions.len() {
-                        solutions[k] = solutions[k] | inner_solutions[k];
+                    solutions[k] = solutions[k] | inner_solutions[k];
                 }
             }
         }
     }
-    
+
     MEMOIZATION.with(|m| {
         m.borrow_mut().insert(numbers, solutions);
     });
-    
+
     solutions
 }
