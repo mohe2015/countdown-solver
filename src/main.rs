@@ -108,16 +108,26 @@ enum Operation {
 }
 
 fn step(numbers: [i32; 6]) -> [u8; 128] {
-    //println!("{:?}", numbers);
-    let is_cached = MEMOIZATION.with(|m| {
-        if let Some(cached_solutions) = m.borrow_mut().get(&numbers) {
-            Some(*cached_solutions)
-        } else {
-            None
+    let mut amount_of_numbers = 0;
+    for (i, number) in numbers.iter().enumerate() {
+        if *number == i32::MAX {
+            amount_of_numbers = i + 1;
+            break;
         }
-    });
-    if let Some(solutions) = is_cached {
-        return solutions;
+    }
+    
+    //println!("{:?}", numbers);
+    if amount_of_numbers > 3 {
+        let is_cached = MEMOIZATION.with(|m| {
+            if let Some(cached_solutions) = m.borrow_mut().get(&numbers) {
+                Some(*cached_solutions)
+            } else {
+                None
+            }
+        });
+        if let Some(solutions) = is_cached {
+            return solutions;
+        }
     }
 
     let mut solutions = [0; 128];
@@ -177,24 +187,35 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
                         }
                     }
                 };
-                let mut new_numbers = numbers;
-                new_numbers[i] = result;
-                for k in j..new_numbers.len() - 1 {
-                    new_numbers[k] = new_numbers[k + 1];
-                }
-                new_numbers[new_numbers.len() - 1] = i32::MAX;
-
-                let inner_solutions = step(new_numbers);
-                for k in 0..solutions.len() {
-                    solutions[k] = solutions[k] | inner_solutions[k];
+                
+                // optimization
+                if amount_of_numbers == 2 {
+                    if (100..1000).contains(&result) {
+                        let index = usize::try_from(result - 100).unwrap();
+                        solutions[index / 8] |= 1 << (index % 8);
+                    }
+                } else {
+                    let mut new_numbers = numbers;
+                    new_numbers[i] = result;
+                    for k in j..new_numbers.len() - 1 {
+                        new_numbers[k] = new_numbers[k + 1];
+                    }
+                    new_numbers[new_numbers.len() - 1] = i32::MAX;
+    
+                    let inner_solutions = step(new_numbers);
+                    for k in 0..solutions.len() {
+                        solutions[k] |= inner_solutions[k];
+                    }
                 }
             }
         }
     }
 
-    MEMOIZATION.with(|m| {
-        m.borrow_mut().insert(numbers, solutions);
-    });
+    if amount_of_numbers > 3 {
+        MEMOIZATION.with(|m| {
+            m.borrow_mut().insert(numbers, solutions);
+        });
+    }
 
     solutions
 }
