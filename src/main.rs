@@ -168,5 +168,10 @@ fn step(numbers: [i32; 6]) -> [u8; 128] {
             }
         }
     }
+    
+    MEMOIZATION.with(|m| {
+        m.borrow_mut().insert(numbers, solutions);
+    });
+    
     solutions
 }
