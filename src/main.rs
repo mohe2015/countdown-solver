@@ -16,16 +16,27 @@ fn generate_small_numbers(mut numbers: [i32; 6], index: usize, max_number: i32) 
         numbers[index] = x / 2;
 
         if index == 5 {
-            print!("{{key: {:?}, value: [", numbers);
+            print!("{{\"key\": {:?}, \"value\": [", numbers);
 
             let solutions = step(numbers);
 
+            let mut first = true;
             for i in 0..900 {
                 if ((solutions[i / 8] >> (i % 8)) & 1) == 0 {
-                    print!("{},", i + 100)
+                    if first {
+                        print!("{}", i + 100);
+                        first = false;
+                    } else {
+                        print!(", {}", i + 100);
+                    }
                 }
             }
-            println!("]}},");
+            // 25, 50, 75, 100, 1, 1 is the last one
+            if numbers[5] == 1 && numbers[4] == 1 && numbers[3] == 100 && numbers[2] == 75 && numbers[1] == 50 && numbers[0] == 25 {
+                println!("]}}");
+            } else {
+                println!("]}},");
+            }
         } else {
             generate_small_numbers(numbers, index + 1, x - 1);
         }
