@@ -36,8 +36,8 @@ time ./target/release/countdown-solver | tee -a result
 
 ```bash
 nix shell nixpkgs#valgrind
-cargo build --release
-valgrind --tool=callgrind ./target/release/countdown-solver
+RUSTFLAGS="-C target-cpu=native" cargo build --release
+valgrind --tool=callgrind ./target/release/countdown-solver > /dev/null
 #callgrind_annotate callgrind.out.*
 nix run nixpkgs#kcachegrind
 ```

@@ -107,6 +107,8 @@ enum Operation {
     ReverseDivision,
 }
 
+// performance notes: we could try a custom implementation for amount_of_numbers <= 3 that doesn't copy
+// solutions that often but I don't know if it's worth it and it's already pretty fast
 fn step(numbers: [i32; 6]) -> [u8; 128] {
     let mut amount_of_numbers = 0;
     for (i, number) in numbers.iter().enumerate() {
