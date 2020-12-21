@@ -2,6 +2,8 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::convert::TryFrom;
 
+// (25+2)*3*2+1+1
+
 fn generate_small_numbers(mut numbers: [i32; 6], index: usize, max_number: i32) {
     for x in (2..max_number + 1).rev() {
         if x % 2 == 0 && numbers[index - 1] != x / 2 {
@@ -19,7 +21,7 @@ fn generate_small_numbers(mut numbers: [i32; 6], index: usize, max_number: i32) 
             let solutions = step(numbers);
 
             for i in 0..900 {
-                if ((solutions[index / 8] >> (i % 8)) & 1) == 0 {
+                if ((solutions[i / 8] >> (i % 8)) & 1) == 0 {
                     print!("{},", i + 100)
                 }
             }
